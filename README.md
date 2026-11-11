@@ -24,10 +24,10 @@ To maintain consistency across all portfolio activities[cite: 4], this repositor
   * **Fines:** Financial penalties calculated for overdue book returns.
   * **Staff:** Employee records and administrative access levels.
 * **Key Operations Supported:**
-  * Searching the book catalogue[cite: 4] by title, author, or category.
-  * Registering and managing borrower accounts[cite: 4].
-  * Executing book borrowing (check-out) and returning (check-in) transactions[cite: 4].
-  * Automatically computing and tracking overdue fines[cite: 4].
+  * Searching the book catalogue by title, author, or category.
+  * Registering and managing borrower accounts.
+  * Executing book borrowing (check-out) and returning (check-in) transactions.
+  * Automatically computing and tracking overdue fines.
 
 ---
 
