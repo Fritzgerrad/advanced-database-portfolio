@@ -1,5 +1,4 @@
 -- Portfolio 2: Library Management System - Complex Reporting Queries
--- Student Name: Samuel Ochie (ID: 301930377)
 
 USE library_db;
 
