@@ -1,35 +1,64 @@
 # Portfolio 4: NoSQL and Advanced Data Models Report
 
 ## 1. Overview
-This module explores document-oriented database modeling using **MongoDB** for the Library Management System. While relational databases enforce strict normalization through tables and joins, NoSQL document stores allow related information to be grouped within flexible JSON documents.
+This module remodels the Library Management System as MongoDB **documents** (document store). The same data as the relational sample (3 borrowers, 4 books, loan ids 1-3, fine ids 1-2) is used, so the two models can be compared directly.
 
-## 2. Document Design Justification
-- **Embedded Structures:** In the relational design (Portfolio 1), retrieving a borrower's active loans and fines required multi-table joins across `Borrowers`, `Loans`, and `Fines`. In MongoDB, active circulation data is **embedded** directly inside the `borrowers` collection array (`activeLoans`).
-- **Performance Benefit:** Read operations for user profiles and active checkouts execute in a single disk lookup, eliminating join overhead for high-frequency user-facing queries.
+Source: `Ochie_Samuel_P4_MongoDB.js` (run in MongoDB Compass playground).
 
-## 3. Implemented Operations
-- ### Document Creation (`insertMany`): Seeded collections for `borrowers` (with embedded loans/fines) and `books` (with embedded categories and authors).
+## 2. Document model
 
-![Books](./screenshots/Books.png)
+**`borrowers` collection**: one document per member, with the member's loans embedded as an array, and each loan's fine embedded in the loan.
 
-![Borrowers](./screenshots/Borrowers.png)
+```json
+{
+  "borrowerId": 1, "firstName": "Alice", "lastName": "Smith",
+  "email": "alice.smith@university.edu", "membershipStatus": "Active",
+  "loans": [ { "loanId": 1, "bookId": 1, "title": "Database System Concepts",
+               "status": "Overdue", "fine": { "fineId": 1, "amount": 5.5, "isPaid": false } } ]
+}
+```
 
-- ### Targeted Filtering: Queried nested arrays to locate overdue books instantly.
-  
-![Overdue Books](./screenshots/Query_A.png)  
-*Query to show Overdue Books*
+**`books` collection**: one document per book with its category and authors embedded (read-mostly catalogue data).
 
-- ### Atomic Document Updates (`updateOne`): Updated nested loan and fine states using positional operators (`.$`).
+| Relational (Portfolio 1) | Document model |
+|---|---|
+| `Borrowers` + `Loans` + `Fines` (3 tables, 2 joins) | one `borrowers` document with `loans[].fine` |
+| `Books` + `Categories` + `BookAuthors` + `Authors` (4 tables) | one `books` document with `category` and `authors[]` |
+| `UNIQUE`, `CHECK`, ENUM | unique indexes and a `$jsonSchema` validator |
 
-![Borrowers](./screenshots/Query_B.png)
+## 3. Implemented operations and evidence
 
-*Query to Show successful update*
+| Step | What it does | Screenshot |
+|---|---|---|
+| Create, validate, index, insert | `createCollection` with `$jsonSchema` validator; unique indexes on email, ISBN, ids; multikey index on `loans.status`; `insertMany` | ![Books](./screenshots/Books.png) ![Borrowers](./screenshots/Borrowers.png) |
+| Query A | Find borrowers with an overdue loan using a nested-array filter | ![Query A](./screenshots/Query_A.png) |
+| Query B | `updateOne` with positional operator `$`: return loan 1 and mark its fine paid | ![Query B](./screenshots/Query_B.png) |
+| Query C | `$unwind` + `$group`: loans and unpaid fine total per loan status | ![Query C](./screenshots/Query_C.png) |
+| Query D | `$lookup` across both collections: loans per category | ![Query C](./screenshots/Query_D.png) |
+| Query E | `explain('executionStats')`: confirms an `IXSCAN` on `loans.status` |![Query C](./screenshots/Query_E.png) |
 
-- ### Aggregation Framework: Used `$unwind` and `$group` pipelines to analyze loan distributions across membership categories.
+> The existing screenshots were taken from the earlier version of the script. Re-run the updated script and replace them so the images match the code (the array is now called `loans`, and Query C now groups by loan status).
 
-![Aggregation](./screenshots/Query_C.png)  
-*Query to show aggregation framework*
+## 4. Design decisions and trade-offs
 
-## 4. Architectural Suitability: SQL vs. NoSQL in an LMS
-* **Read Performance & Scalability (NoSQL Strength):** Document models excel in user-facing dashboards and member portals. Fetching a member's complete profile, active loans, and fine status requires zero joins, resulting in fast single-document lookups ($O(1)$) and effortless horizontal scaling as catalog and user sizes expand.
-* **ACID Compliance & Integrity Constraints (Relational Strength):** Relational databases (MariaDB) remain superior for core financial and inventory ledgering where strict foreign key enforcement, multi-table consistency, and bulletproof ACID transaction boundaries are mandatory to prevent negative inventory stock or orphaned records.
+**Why embed loans in the borrower?** A member's profile, loans and fines are read together on almost every screen, and one member has a bounded number of loans. One document read replaces two joins, and a single-document update is atomic in MongoDB.
+
+**What embedding costs:**
+* **Duplication.** Each loan copies the book `title` and `isbn`, and each book embeds the full category description. If a title is corrected, every copy must be updated, which the relational model avoids by storing it once. The copy is acceptable here because a loan record should show the title *as it was when borrowed*, but the category description is duplicated for convenience only.
+* **Unbounded growth.** A member who borrows for decades would grow an ever larger document (the BSON limit is 16 MB). In production, closed loans would move to a separate `loanHistory` collection and only open loans would stay embedded (the "bucket"/archive pattern).
+* **Cross-collection queries need `$lookup`** (Query D), which is the NoSQL counterpart of a join and is slower than an embedded read. Whole-library statistics, such as loans per category, are a poor fit for this model.
+* **Consistency.** Decrementing `stockQuantity` in `books` and adding a loan in `borrowers` touch two documents. That needs a multi-document transaction (supported on replica sets) or careful ordering, which is why inventory stays in the relational database in the suitability recommendation below.
+
+**Correction notes from the first version:** returned loans were being left in an array called `activeLoans`, which was misleading (the array is now `loans`); Query C grouped by `membershipStatus`, where every member was `Active`, so it showed nothing; the sample ids did not match the SQL ids.
+
+## 5. Suitability: SQL vs NoSQL for this system
+
+| Concern | Better fit | Reason |
+|---|---|---|
+| Member dashboard (profile, open loans, fines) | Document | One read, no joins |
+| Catalogue browse and search | Document | Self-contained book documents scale reads easily |
+| Stock levels, checkout, fine payment | Relational | Multi-row ACID transactions and foreign keys (Portfolio 3) |
+| Library-wide reports | Relational | Joins and aggregation across all entities |
+| Audit logs, notification history | Document | Append-heavy, flexible structure |
+
+**Recommendation:** polyglot persistence. Keep the system of record (inventory, loans, fines) in MariaDB, and serve read-heavy member and catalogue views from MongoDB, kept in sync from the relational database.

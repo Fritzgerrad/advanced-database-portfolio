@@ -18,25 +18,30 @@ JOIN Loans l ON b.BorrowerID = l.BorrowerID
 JOIN Books bk ON l.BookID = bk.BookID
 JOIN Fines f ON l.LoanID = f.LoanID
 WHERE l.Status = 'Overdue' AND f.IsPaid = FALSE;
+ORDER BY DaysOverdue DESC
+LIMIT 50;
 
 -- 2. Category Popularity and Circulation Aggregation: Counts total loans per book category.
-SELECT 
+SELECT
     c.CategoryName,
     COUNT(l.LoanID) AS TotalTimesBorrowed,
-    SUM(bk.StockQuantity) AS CurrentStockLevel
+    (SELECT COALESCE(SUM(b2.StockQuantity), 0)
+       FROM Books b2
+      WHERE b2.CategoryID = c.CategoryID) AS CurrentStockLevel
 FROM Categories c
-JOIN Books bk ON c.CategoryID = bk.CategoryID
+LEFT JOIN Books bk ON c.CategoryID = bk.CategoryID
 LEFT JOIN Loans l ON bk.BookID = l.BookID
 GROUP BY c.CategoryID, c.CategoryName
 ORDER BY TotalTimesBorrowed DESC;
 
 -- 3. Borrower Loan History Summary: Aggregates total lifetime loans and active loans per user.
-SELECT 
+SELECT
     b.BorrowerID,
     b.Email,
     COUNT(l.LoanID) AS LifetimeLoans,
-    SUM(CASE WHEN l.Status = 'Borrowed' OR l.Status = 'Overdue' THEN 1 ELSE 0 END) AS ActiveLoansCount
+    SUM(l.Status IN ('Borrowed', 'Overdue')) AS ActiveLoansCount
 FROM Borrowers b
-LEFT JOIN Loans l ON b.BorrowerID = l.BorrowerID
+JOIN Loans l ON b.BorrowerID = l.BorrowerID
 GROUP BY b.BorrowerID, b.Email
-HAVING LifetimeLoans > 0;
+ORDER BY LifetimeLoans DESC
+LIMIT 50;
