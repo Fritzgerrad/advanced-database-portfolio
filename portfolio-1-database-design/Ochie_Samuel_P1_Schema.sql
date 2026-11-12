@@ -70,7 +70,7 @@ CREATE TABLE Loans (
     CONSTRAINT fk_loan_borrower FOREIGN KEY (BorrowerID) 
         REFERENCES Borrowers(BorrowerID) 
         ON UPDATE CASCADE 
-        ON DELETE CASCADE,
+        ON DELETE RESTRICT,
     CONSTRAINT fk_loan_book FOREIGN KEY (BookID) 
         REFERENCES Books(BookID) 
         ON UPDATE CASCADE 
@@ -80,7 +80,7 @@ CREATE TABLE Loans (
 -- 7. Fines Table (Tracks financial penalties for late returns)
 CREATE TABLE Fines (
     FineID INT PRIMARY KEY AUTO_INCREMENT,
-    LoanID INT NOT NULL,
+    LoanID INT NOT NULL UNIQUE,
     Amount DECIMAL(8, 2) NOT NULL CHECK (Amount >= 0.00),
     IsPaid BOOLEAN DEFAULT FALSE,
     PaidDate TIMESTAMP NULL,

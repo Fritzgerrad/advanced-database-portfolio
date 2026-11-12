@@ -113,6 +113,7 @@ My case study records `Categories`, `Authors`, `Books`, `BookAuthors`, `Borrower
 | IsPaid | BOOLEAN |  | Yes (Default: `FALSE`) |
 | PaidDate | TIMESTAMP |  | No |
 
+- Unique key: (`LoanID`) — a loan has at most one fine (1 : 0..1).
 - LoanID → `Loans.LoanID` (`ON UPDATE CASCADE`, `ON DELETE CASCADE`).
 
 ## Relationships and business rules
