@@ -6,7 +6,7 @@
 
 ## 1. Visual ER Diagram
 
-![ER Diagram](../images/ERDiagram.png)
+![ER Diagram](./screenshots/ER_DIagram.png)
 
 ---
 

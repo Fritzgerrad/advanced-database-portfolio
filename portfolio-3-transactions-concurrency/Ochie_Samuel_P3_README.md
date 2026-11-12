@@ -12,3 +12,25 @@ This module demonstrates transaction management and concurrency control within t
 ## 3. Concurrency & Locking Mechanism
 When multiple library members attempt to borrow the last available copy of a popular book simultaneously, race conditions can lead to inventory overselling. 
 * By using **row-level exclusive locks** (`FOR UPDATE`), the database serializes access to the specific book record, ensuring that only one transaction can decrement the stock at a time while concurrent requests wait safely in queue.
+
+##
+The final SELECT query execution result grid in Session B shows the incorrect final stock count i.e 9 instead of 8 after two separate -1 decrements.
+![Query Results](./screenshots/SC1.png)
+
+Session B wrote a stale value based on an outdated read.
+##
+The query is delaying to be executed
+![Query Results](./screenshots/SC2.png)
+
+
+Session B is safely queued and blocked from reading/writing until Session A commits because row-level pessimistic locking (FOR UPDATE) by the RDBMS forces concurrent sessions to wait for active transactions to release locks.
+
+##
+
+The final SELECT query result grid in Session B showing the correct decremented stock value i.e 8 after both transactions completed sequentially.
+![Query Results](./screenshots/SC3.png)
+Pessimistic locking successfully prevented the race condition, ensuring ACID compliance and data integrity. Once Session A committed (Step 8), Session B automatically unblocked, fetched the updated value, applied its increment/decrement cleanly, and maintained inventory consistency.
+
+
+
+
