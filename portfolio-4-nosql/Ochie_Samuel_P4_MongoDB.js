@@ -98,9 +98,7 @@ db.books.insertMany([
     }
 ]);
 
-// =========================================================================
 // 4. CRUD OPERATIONS AND QUERIES
-// =========================================================================
 
 // Query A: Find all borrowers who currently have an 'Overdue' loan status
 print("--- Overdue Loans Report ---");

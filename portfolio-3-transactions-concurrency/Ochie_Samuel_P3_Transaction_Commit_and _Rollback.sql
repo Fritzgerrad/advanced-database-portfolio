@@ -76,4 +76,3 @@ VALUES (99999, 1, NOW(), DATE_ADD(NOW(), INTERVAL 14 DAY), 'Active');
 ROLLBACK;
 
 SELECT 'INFO: Transaction successfully rolled back due to constraint violation.' AS RollbackStatus;
-
