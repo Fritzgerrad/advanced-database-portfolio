@@ -1,8 +1,4 @@
 # Portfolio 4: NoSQL and Advanced Data Models Report
-**Student Name:** Samuel Ochie  
-**Student ID:** 301930377  
-**Institution:** MIVA Open University  
-**Course:** MIT 8103 Advanced Database Systems
 
 ## 1. Overview
 This module explores document-oriented database modeling using **MongoDB** for the Library Management System. While relational databases enforce strict normalization through tables and joins, NoSQL document stores allow related information to be grouped within flexible JSON documents.
@@ -12,25 +8,26 @@ This module explores document-oriented database modeling using **MongoDB** for t
 - **Performance Benefit:** Read operations for user profiles and active checkouts execute in a single disk lookup, eliminating join overhead for high-frequency user-facing queries.
 
 ## 3. Implemented Operations
-- **Document Creation (`insertMany`):** Seeded collections for `borrowers` (with embedded loans/fines) and `books` (with embedded categories and authors).
+- ### Document Creation (`insertMany`): Seeded collections for `borrowers` (with embedded loans/fines) and `books` (with embedded categories and authors).
 
 ![Books](./screenshots/Books.png)
 
 ![Borrowers](./screenshots/Borrowers.png)
 
-- **Targeted Filtering:** Queried nested arrays to locate overdue books instantly.
+- ### Targeted Filtering: Queried nested arrays to locate overdue books instantly.
   
-![Overdue Books](./screenshots/Query_A.png)
+![Overdue Books](./screenshots/Query_A.png)  
 *Query to show Overdue Books*
 
-- **Atomic Document Updates (`updateOne`):** Updated nested loan and fine states using positional operators (`.$`).
+- ### Atomic Document Updates (`updateOne`): Updated nested loan and fine states using positional operators (`.$`).
 
 ![Borrowers](./screenshots/Query_B.png)
+
 *Query to Show successful update*
 
-- **Aggregation Framework:** Used `$unwind` and `$group` pipelines to analyze loan distributions across membership categories.
+- ### Aggregation Framework: Used `$unwind` and `$group` pipelines to analyze loan distributions across membership categories.
 
-![Aggregation](./screenshots/Query_C.png)
+![Aggregation](./screenshots/Query_C.png)  
 *Query to show aggregation framework*
 
 ## 4. Architectural Suitability: SQL vs. NoSQL in an LMS
