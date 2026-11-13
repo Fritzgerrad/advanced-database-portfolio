@@ -84,6 +84,7 @@ CREATE TABLE Fines (
     Amount DECIMAL(8, 2) NOT NULL CHECK (Amount >= 0.00),
     IsPaid BOOLEAN DEFAULT FALSE,
     PaidDate TIMESTAMP NULL,
+    CONSTRAINT uq_fine_loan UNIQUE (LoanID),
     CONSTRAINT fk_fine_loan FOREIGN KEY (LoanID) 
         REFERENCES Loans(LoanID) 
         ON UPDATE CASCADE 

@@ -35,7 +35,7 @@ BEGIN
     IF v_CurrentStock > 0 THEN
         -- Insert active loan record
         INSERT INTO Loans (BorrowerID, BookID, LoanDate, DueDate, Status)
-        VALUES (p_BorrowerID, p_BookID, NOW(), p_DueDate, 'Active');
+        VALUES (p_BorrowerID, p_BookID, NOW(), p_DueDate, 'Borrowed');
         
         -- Decrement stock quantity
         UPDATE Books
@@ -69,7 +69,7 @@ START TRANSACTION;
 
 -- Attempting an invalid insert (e.g., non-existent member or business rule violation)
 INSERT INTO Loans (BorrowerID, BookID, LoanDate, DueDate, Status)
-VALUES (99999, 1, NOW(), DATE_ADD(NOW(), INTERVAL 14 DAY), 'Active');
+VALUES (99999, 1, NOW(), DATE_ADD(NOW(), INTERVAL 14 DAY), 'Borrowed'); -- Assuming BorrowerID 99999 does not exist
 
 -- Simulating an error condition check
 -- If an error is caught or triggered, we explicitly rollback:

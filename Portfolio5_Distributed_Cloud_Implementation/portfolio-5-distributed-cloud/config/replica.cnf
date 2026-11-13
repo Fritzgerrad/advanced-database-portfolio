@@ -1,0 +1,7 @@
+[mariadb]
+server_id=102
+relay_log=library-relay-bin
+read_only=ON
+log_bin=mariadb-bin
+log_slave_updates=ON
+binlog_format=ROW

@@ -37,8 +37,6 @@ Source: `Ochie_Samuel_P4_MongoDB.js` (run in MongoDB Compass playground).
 | Query D | `$lookup` across both collections: loans per category | ![Query C](./screenshots/Query_D.png) |
 | Query E | `explain('executionStats')`: confirms an `IXSCAN` on `loans.status` |![Query C](./screenshots/Query_E.png) |
 
-> The existing screenshots were taken from the earlier version of the script. Re-run the updated script and replace them so the images match the code (the array is now called `loans`, and Query C now groups by loan status).
-
 ## 4. Design decisions and trade-offs
 
 **Why embed loans in the borrower?** A member's profile, loans and fines are read together on almost every screen, and one member has a bounded number of loans. One document read replaces two joins, and a single-document update is atomic in MongoDB.

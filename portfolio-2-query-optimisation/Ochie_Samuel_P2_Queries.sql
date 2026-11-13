@@ -17,7 +17,7 @@ FROM Borrowers b
 JOIN Loans l ON b.BorrowerID = l.BorrowerID
 JOIN Books bk ON l.BookID = bk.BookID
 JOIN Fines f ON l.LoanID = f.LoanID
-WHERE l.Status = 'Overdue' AND f.IsPaid = FALSE;
+WHERE l.Status = 'Overdue' AND f.IsPaid = FALSE
 ORDER BY DaysOverdue DESC
 LIMIT 50;
 

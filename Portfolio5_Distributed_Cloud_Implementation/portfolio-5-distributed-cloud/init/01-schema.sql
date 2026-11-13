@@ -1,0 +1,64 @@
+-- The Portfolio 1 schema is reused so both nodes represent the same library system.
+CREATE DATABASE IF NOT EXISTS library_db;
+USE library_db;
+
+CREATE TABLE Authors (
+    AuthorID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Bio TEXT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE Categories (
+    CategoryID INT PRIMARY KEY AUTO_INCREMENT,
+    CategoryName VARCHAR(100) UNIQUE NOT NULL,
+    Description TEXT NULL
+);
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY AUTO_INCREMENT,
+    Title VARCHAR(150) NOT NULL,
+    ISBN VARCHAR(20) UNIQUE NOT NULL,
+    PublicationYear YEAR NOT NULL,
+    CategoryID INT NOT NULL,
+    StockQuantity INT NOT NULL DEFAULT 1 CHECK (StockQuantity >= 0),
+    CONSTRAINT fk_book_category FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+      ON UPDATE CASCADE ON DELETE RESTRICT
+);
+CREATE TABLE BookAuthors (
+    BookID INT NOT NULL,
+    AuthorID INT NOT NULL,
+    PRIMARY KEY (BookID, AuthorID),
+    CONSTRAINT fk_ba_book FOREIGN KEY (BookID) REFERENCES Books(BookID) ON DELETE CASCADE,
+    CONSTRAINT fk_ba_author FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID) ON DELETE CASCADE
+);
+CREATE TABLE Borrowers (
+    BorrowerID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
+    MembershipStatus ENUM('Active', 'Suspended', 'Expired') DEFAULT 'Active',
+    JoinedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE Loans (
+    LoanID INT PRIMARY KEY AUTO_INCREMENT,
+    BorrowerID INT NOT NULL,
+    BookID INT NOT NULL,
+    LoanDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    DueDate DATE NOT NULL,
+    ReturnDate DATE NULL,
+    Status ENUM('Borrowed', 'Returned', 'Overdue') DEFAULT 'Borrowed',
+    CONSTRAINT fk_loan_borrower FOREIGN KEY (BorrowerID) REFERENCES Borrowers(BorrowerID)
+      ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT fk_loan_book FOREIGN KEY (BookID) REFERENCES Books(BookID)
+      ON UPDATE CASCADE ON DELETE RESTRICT
+);
+CREATE TABLE Fines (
+    FineID INT PRIMARY KEY AUTO_INCREMENT,
+    LoanID INT NOT NULL UNIQUE,
+    Amount DECIMAL(8,2) NOT NULL CHECK (Amount >= 0.00),
+    IsPaid BOOLEAN DEFAULT FALSE,
+    PaidDate TIMESTAMP NULL,
+    CONSTRAINT fk_fine_loan FOREIGN KEY (LoanID) REFERENCES Loans(LoanID)
+      ON UPDATE CASCADE ON DELETE CASCADE
+);
