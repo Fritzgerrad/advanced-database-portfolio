@@ -10,10 +10,10 @@ services:
       - "3307:3306"
     volumes:
       - primary_data:/var/lib/mysql
-      - ./config/primary.cnf:/etc/mysql/conf.d/primary.cnf:ro
-      - ./init/01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
-      - ./init/02-sample-data.sql:/docker-entrypoint-initdb.d/02-sample-data.sql:ro
-      - ./init/03-replication-user.sql:/docker-entrypoint-initdb.d/03-replication-user.sql:ro
+      - ./config/primary.cnf:/etc/mysql/conf.d/primary.cnf:ro,Z
+      - ./init/01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro,Z
+      - ./init/02-sample-data.sql:/docker-entrypoint-initdb.d/02-sample-data.sql:ro,Z
+      - ./init/03-replication-user.sql:/docker-entrypoint-initdb.d/03-replication-user.sql:ro,Z
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
@@ -30,7 +30,7 @@ services:
       - "3308:3306"
     volumes:
       - replica_data:/var/lib/mysql
-      - ./config/replica.cnf:/etc/mysql/conf.d/replica.cnf:ro
+      - ./config/replica.cnf:/etc/mysql/conf.d/replica.cnf:ro,Z
     depends_on:
       library-primary:
         condition: service_healthy

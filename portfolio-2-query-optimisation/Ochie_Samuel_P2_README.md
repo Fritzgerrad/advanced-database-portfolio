@@ -167,13 +167,13 @@ Below shows the results of `ANALYZE` (actual rows and time), before and after th
 | Q-A overdue > 30 days | ALL / NULL / 99912 |27 | range / idx_loans_status_due / 9711| 5 |
 | Q-B title prefix |ALL / NULL / 20166 | 9 | range / idx_books_title / 8000 | 3 |
 | Q-C title `%word%` (control) | ALL / NULL / 20166 | 11 | index / idx_books_title / 20161| 2 |
-| Q-D member's open loans | ref / fk_loan_borrower / 20 | 2 | ref / idx_loans_borrower_status / 2 | … |
+| Q-D member's open loans | ref / fk_loan_borrower / 20 | 2 | ref / idx_loans_borrower_status / 2 | 2 |
 | Q-E ISBN lookup (control) | const / ISBN / 1 | 2 | const / ISBN / 1 | 1 |
-| Q-F unpaid fines | ALL,eq_ref / NULL,PRIMARY / 48893,1 | 48 | ALL, eq_ref / NULL, PRIMARY. 50150,1 | 35 |
+| Q-F unpaid fines | ALL,eq_ref / NULL,PRIMARY / 50150,1 | 39 | ALL, eq_ref / NULL, PRIMARY. 50150,1 | 35 |
 
 ---
 
 * **Q-A and Q-B** are the cases where an index should turn a full scan (`type = ALL`, rows ≈ table size) into a `range` scan examining a fraction of the rows.
 * **Q-C and Q-E** are controls. Q-C should stay a full scan whatever index exists, and Q-E should stay `const` because the index was already there.
 * **Q-D** should change little, which is a useful lesson: an extra index is not automatically an improvement.
-* **Q-F** may keep its original plan. If the optimiser ignores `idx_fines_ispaid`, that is a valid finding and the index should be dropped.
+* **Q-F** may keep its original plan.
