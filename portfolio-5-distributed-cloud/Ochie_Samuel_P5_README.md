@@ -66,7 +66,7 @@ docker compose ps
 
 The schema and sample data are loaded automatically on the primary's first initialisation.
 
-![Query Results](/screenshots/Ochie_Samuel_01_containers_healthy.png)
+![Query Results](./screenshots/Ochie_Samuel_01_containers_healthy.png)
 
 
 ### Verify binary logging on the primary
@@ -85,7 +85,7 @@ SHOW VARIABLES LIKE 'log_bin';
 
 SHOW MASTER STATUS;
 ```
-![Query Results](/screenshots/Ochie_Samuel_02_primary_master_status.png)
+![Query Results](./screenshots/Ochie_Samuel_02_primary_master_status.png)
 
 This confirms that binary logging is active. The primary is recording database changes so that the replica can retrieve and replay them.
 
@@ -133,7 +133,7 @@ CHANGE MASTER TO
 START SLAVE;
 SHOW SLAVE STATUS\G
 ```
-![Query Results](/screenshots/Ochie_Samuel_03_replica_slave_status.png)
+![Query Results](./screenshots/Ochie_Samuel_03_replica_slave_status.png)
 
 
 ## 5. Replication test
@@ -144,14 +144,14 @@ Run the write script against the primary:
 source .env
 docker exec -i library-primary sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' <tests/ Ochie_Samuel_01-primary-write.sql
 ```
-![Query Results](/screenshots/Ochie_Samuel_04_primary_write_test.png)
+![Query Results](./screenshots/Ochie_Samuel_04_primary_write_test.png)
 
 Then run the read/verification script against the replica:
 
 ```bash
 docker exec -i library-replica sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < tests/ Ochie_Samuel_02-replica-read.sql
 ```
-![Query Results](/screenshots/Ochie_Samuel_05_replica_read_test.png)
+![Query Results](./screenshots/Ochie_Samuel_05_replica_read_test.png)
 The borrower with email `replication.check@example.test` and the reduced stock quantity for ISBN `9780078022159` are visible on the replica.
 
 ## 6. Availability and failure behaviour
@@ -163,7 +163,7 @@ For a controlled local demonstration only, after confirming the replica has caug
 ```bash
 docker stop library-primary
 ```
-![Query Results](/screenshots/Ochie_Samuel_06_stopped_container.png)
+![Query Results](./screenshots/Ochie_Samuel_06_stopped_container.png)
 
 Run the script to query the database
 
@@ -175,7 +175,7 @@ WHERE Email = 'replication.check@example.test';
 SELECT @@global.read_only;
 ```
 
-![Query Results](/screenshots/Ochie_Samuel_07_read_availability.png)
+![Query Results](./screenshots/Ochie_Samuel_07_read_availability.png)
 
 The borrower record is still be accessible and read_only returns 1. This confirms two important things:
 - Read availability: The replica can still serve queries when the primary is unavailable.
@@ -200,7 +200,7 @@ Finally, Disable read-only mode so that the promoted replica can accept writes a
 SET GLOBAL read_only = OFF;
 SELECT @@global.read_only;
 ```
-![Query Results](/screenshots/Ochie_Samuel_08_replica_manual_promotion.png.png)
+![Query Results](./screenshots/Ochie_Samuel_08_replica_manual_promotion.png.png)
 
 The result `0`shows and test insert can now be performed on the promoted node. 
 
@@ -211,7 +211,7 @@ INSERT INTO Borrowers (FirstName, LastName, Email, Phone) VALUES ('Sam', 'Gerard
 
 SELECT * FROM Borrowers WHERE FirstName = 'Sam';
 ```
-![Query Results](/screenshots/Ochie_Samuel_09_write_availability_proof.png)
+![Query Results](./screenshots/Ochie_Samuel_09_write_availability_proof.png)
 
 This proves that the former replica can now accept and retrieve new records independently of the failed primary.
 

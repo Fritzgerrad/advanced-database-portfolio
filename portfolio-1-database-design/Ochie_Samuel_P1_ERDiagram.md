@@ -6,8 +6,7 @@
 
 ## 1. Visual ER Diagram
 
-![ER Diagram](./screenshots/ER_DIagram.png)
-
+![ER Diagram](./screenshots/Ochie_Samuel_ER_DIagram.png)
 ---
 
 ## 2. Structural Relationships and Cardinalities

@@ -35,9 +35,8 @@ To maintain consistency across all portfolio activities, this repository models 
 
 This portfolio is organized into five core modules as required by the course guidelines:
 
-```text
-.
-├──  Ochie_Samuel_README.md
+```text.
+├── Ochie_Samuel_README.md
 ├── portfolio-1-database-design
 │   ├── Ochie_Samuel_Full_ER_Diagram.erd
 │   ├── Ochie_Samuel_P1_Case_Study_Description.md
@@ -125,9 +124,11 @@ This portfolio is organized into five core modules as required by the course gui
     │   ├── Ochie_Samuel_07_read_availability.png
     │   ├── Ochie_Samuel_08_replica_manual_promotion.png.png
     │   └── Ochie_Samuel_09_write_availability_proof.png
-    └── tests
-        ├── Ochie_Samuel_01-primary-write.sql
-        └── Ochie_Samuel_02-replica-read.sql
+    └── scripts
+        ├── Ochie_Samuel_primary_write.sql
+        ├── Ochie_Samuel_replica_read.sql
+        ├── Ochie_Samuel_sql_commands.sql
+        └── Ochie_Samuel_terminal_commands.sh
 
 ```
 
@@ -168,5 +169,5 @@ This portfolio is organized into five core modules as required by the course gui
 
 **Database Clients:** DBeaver, MongoDB Compass
 
-**Cloud & Distributed Architecture:** AWS (Route 53, CloudFront, ALB, ASG, ElastiCache Redis), MongoDB Atlas Global Clusters
+**Cloud & Distributed Architecture:** Docker, Linux, AWS (Route 53, CloudFront, ALB, ASG, ElastiCache Redis), MongoDB Atlas Global Clusters
 

@@ -30,12 +30,12 @@ Source: `Ochie_Samuel_P4_MongoDB.js` (run in MongoDB Compass playground).
 
 | Step | What it does | Screenshot |
 |---|---|---|
-| Create, validate, index, insert | `createCollection` with `$jsonSchema` validator; unique indexes on email, ISBN, ids; multikey index on `loans.status`; `insertMany` | ![Books](/screenshots/Ochie_Samuel_Books.png) ![Borrowers](/screenshots/Ochie_Samuel_Borrowers.png) |
-| Query A | Find borrowers with an overdue loan using a nested-array filter | ![Query A](/screenshots/Ochie_Samuel_Query_A.png) |
-| Query B | `updateOne` with positional operator `$`: return loan 1 and mark its fine paid | ![Query B](/screenshots/Ochie_Samuel_Query_B.png) |
-| Query C | `$unwind` + `$group`: loans and unpaid fine total per loan status | ![Query C](/screenshots/Ochie_Samuel_Query_C.png) |
-| Query D | `$lookup` across both collections: loans per category | ![Query C](/screenshots/Ochie_Samuel_Query_D.png) |
-| Query E | `explain('executionStats')`: confirms an `IXSCAN` on `loans.status` |![Query C](/screenshots/Ochie_Samuel_Query_E.png) |
+| Create, validate, index, insert | `createCollection` with `$jsonSchema` validator; unique indexes on email, ISBN, ids; multikey index on `loans.status`; `insertMany` | ![Books](./screenshots/Ochie_Samuel_Books.png) ![Borrowers](./screenshots/Ochie_Samuel_Borrowers.png) |
+| Query A | Find borrowers with an overdue loan using a nested-array filter | ![Query A](./screenshots/Ochie_Samuel_Query_A.png) |
+| Query B | `updateOne` with positional operator `$`: return loan 1 and mark its fine paid | ![Query B](./screenshots/Ochie_Samuel_Query_B.png) |
+| Query C | `$unwind` + `$group`: loans and unpaid fine total per loan status | ![Query C](./screenshots/Ochie_Samuel_Query_C.png) |
+| Query D | `$lookup` across both collections: loans per category | ![Query C](./screenshots/Ochie_Samuel_Query_D.png) |
+| Query E | `explain('executionStats')`: confirms an `IXSCAN` on `loans.status` |![Query C](./screenshots/Ochie_Samuel_Query_E.png) |
 
 ## 4. Design decisions and trade-offs
 
