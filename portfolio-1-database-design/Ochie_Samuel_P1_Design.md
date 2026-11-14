@@ -99,7 +99,7 @@ My case study records `Categories`, `Authors`, `Books`, `BookAuthors`, `Borrower
 | ReturnDate | DATE |  | No |
 | Status | ENUM |  | Yes (Default: `'Borrowed'`) |
 
-- BorrowerID → `Borrowers.BorrowerID` (`ON UPDATE CASCADE`, `ON DELETE CASCADE`).
+- BorrowerID → `Borrowers.BorrowerID` (`ON UPDATE RESTRICT`, `ON DELETE CASCADE`).
 - BookID → `Books.BookID` (`ON UPDATE CASCADE`, `ON DELETE RESTRICT`).
 - Status values: `'Borrowed'`, `'Returned'`, `'Overdue'`.
 

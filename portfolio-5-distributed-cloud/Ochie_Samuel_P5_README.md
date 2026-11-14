@@ -79,7 +79,7 @@ sudo docker exec -it library-primary mariadb -uroot -p
 
 At the MariaDB prompt, run:
 ```sql
-HOW VARIABLES LIKE 'server_id';
+SHOW VARIABLES LIKE 'server_id';
 
 SHOW VARIABLES LIKE 'log_bin';
 
@@ -142,14 +142,14 @@ Run the write script against the primary:
 
 ```bash
 source .env
-docker exec -i library-primary sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' <tests/ Ochie_Samuel_01-primary-write.sql
+docker exec -i library-primary sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' <scripts/ Ochie_Samuel_primary_write.sql
 ```
 ![Query Results](./screenshots/Ochie_Samuel_04_primary_write_test.png)
 
 Then run the read/verification script against the replica:
 
 ```bash
-docker exec -i library-replica sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < tests/ Ochie_Samuel_02-replica-read.sql
+docker exec -i library-replica sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < scripts/ Ochie_Samuel_replica_read.sql
 ```
 ![Query Results](./screenshots/Ochie_Samuel_05_replica_read_test.png)
 The borrower with email `replication.check@example.test` and the reduced stock quantity for ISBN `9780078022159` are visible on the replica.
@@ -200,7 +200,7 @@ Finally, Disable read-only mode so that the promoted replica can accept writes a
 SET GLOBAL read_only = OFF;
 SELECT @@global.read_only;
 ```
-![Query Results](./screenshots/Ochie_Samuel_08_replica_manual_promotion.png.png)
+![Query Results](./screenshots/Ochie_Samuel_08_replica_manual_promotion.png)
 
 The result `0`shows and test insert can now be performed on the promoted node. 
 

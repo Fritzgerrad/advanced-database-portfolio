@@ -80,7 +80,7 @@ CREATE TABLE Loans (
 -- 7. Fines Table (Tracks financial penalties for late returns)
 CREATE TABLE Fines (
     FineID INT PRIMARY KEY AUTO_INCREMENT,
-    LoanID INT NOT NULL UNIQUE,
+    LoanID INT NOT NULL,
     Amount DECIMAL(8, 2) NOT NULL CHECK (Amount >= 0.00),
     IsPaid BOOLEAN DEFAULT FALSE,
     PaidDate TIMESTAMP NULL,
