@@ -1,9 +1,4 @@
 # Portfolio 5: Distributed and Cloud Database Exercise
-
-**Course:** MIT 8103 – Advanced Database Systems  
-**Case study:** Library Management System  
-**Implementation:** MariaDB 10.11 primary–replica replication using Docker Compose  
-
 ## 1. Aim and scope
 
 This exercise extends the relational Library Management System from Portfolio 1 into a two-node database topology. The primary node accepts application writes and records changes in its binary log. A separate replica reads that log and replays the changes. The replica is configured as read-only for ordinary application connections and can serve suitable read/reporting workloads.
@@ -216,7 +211,7 @@ This proves that the former replica can now accept and retrieve new records inde
 
 ## 7. Sharding and partitioning design
 
-The current executable deployment uses replication, not sharding. For a larger multi-campus library, a possible horizontal sharding key is `CampusID` (if added to the schema) or a stable hash of `BorrowerID`. Each shard would hold the borrower, loan and fine records assigned to its campus/hash range. A request routed by the shard key can be directed to one shard; global reports may need fan-out queries and aggregation across shards. Referential integrity across shards and rebalancing are additional operational challenges. The current seven-table schema has no `CampusID`, so this remains a proposed extension rather than an implemented feature.
+The current executable deployment uses replication, not sharding. For a larger multi-campus library, a possible horizontal sharding key is `CampusID` or a stable hash of `BorrowerID`. Each shard would hold the borrower, loan and fine records assigned to its campus/hash range. A request routed by the shard key can be directed to one shard; global reports may need fan-out queries and aggregation across shards. Referential integrity across shards and rebalancing are additional operational challenges. The current seven-table schema has no `CampusID`, so this remains a proposed extension rather than an implemented feature.
 
 ## 8. Consistency and CAP considerations
 
@@ -224,21 +219,7 @@ MariaDB primary–replica replication here is asynchronous. A successful commit 
 
 During a network partition, this design does not make both nodes independent writable primaries. The primary remains the write authority; the replica is not automatically promoted. This avoids routine multi-primary write conflicts but means writes may be unavailable during primary failure. The CAP discussion should therefore be tied to the actual deployment behaviour, not described as a simple switch that makes individual tables CP or AP.
 
-## 9. Security and production limitations
 
-The included credentials are for a disposable local demonstration only. Change them before running, do not commit `.env`, and do not expose database ports to the public internet. A production design would additionally require TLS, secret management, least-privilege application accounts, backups and restore tests, monitoring/alerting, automated failover with split-brain protection, replication-lag handling, capacity planning and a documented recovery procedure.
-
-## 10. Evidence to capture for submission
-
-1. `docker compose ps` showing both database containers healthy.
-2. Primary `SHOW MASTER STATUS\G` output.
-3. Replica `SHOW SLAVE STATUS\G` showing both replication threads running.
-4. Primary write script result.
-5. Replica query showing the replicated borrower and stock value.
-6. Optional controlled manual-promotion screenshot showing `@@read_only = 0` after the primary has been stopped.
-
-Save the screenshots in `screenshots/` and refer to them in this report. Do not claim a test passed until it has been executed and the output captured.
-
-## 11. Conclusion
+## 9. Conclusion
 
 The exercise deploys a two-node MariaDB primary–replica topology for the Library Management System. It demonstrates binary-log-based asynchronous replication, separate database instances, read-only replica configuration, replication monitoring and a manual failover procedure. It also identifies the consistency lag and operational trade-offs of this architecture. Sharding and multi-region cloud deployment are discussed as future extensions rather than presented as completed implementation.
