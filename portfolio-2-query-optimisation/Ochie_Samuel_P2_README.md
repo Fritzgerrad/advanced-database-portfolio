@@ -36,17 +36,17 @@ Re-evaluating the execution plan via `ANALYZE` yields the following structural i
 Execution output for member borrowing summaries and category metrics aptured directly within DBeaver.
 
 #### Active Borrowers
-![Query Results](./screenshots/Active_Borrowers_P2.png)
+![Image](./screenshots/Ochie_Samuel_Active_Borrowers_P2.png)
 
 #### Borrowers Loan History
-![Query Results](./screenshots/Borrowers_Loan_HIstory.png)
+![Image](./screenshots/Ochie_Samuel_Borrowers_Loan_HIstory.png)
 
 #### Bulk Data
-![Query Results](./screenshots/Bulk_Data_Result.png)
+![Image](./screenshots/Ochie_Samuel_Bulk_Data_Result.png)
 
 
 #### Category Popularity and Circulation Aggregation: Total loans per book.
-![Query Results](./screenshots/Category_Popularity_and_Circulation_Aggregation_P2.png)
+![Image](./screenshots/Ochie_Samuel_Category_Popularity_and_Circulation_Aggregation_P2.png)
 
 
 ## 5. Performance Analysis
@@ -66,19 +66,19 @@ The command below was run to create the indexes.
 
 #### Default Indexes
 - ##### Books
-![Query Results](./screenshots/Initial_Book_Index.png)
+![Image](./screenshots/Ochie_Samuel_Initial_Book_Index.png)
 - ##### Loan
-![Query Results](./screenshots/Initial_Loans_Index.png)
+![Image](./screenshots/Ochie_Samuel_Initial_Loans_Index.png)
 - ##### Fines
-![Query Results](./screenshots/Initial_Fines_Index.png)
+![Image](./screenshots/Ochie_Samuel_Initial_Fines_Index.png)
 
 #### Indexes Created
 - ##### Books
-![Query Results](./screenshots/Final_Books_Index.png)
+![Image](./screenshots/Ochie_Samuel_Final_Books_Index.png)
 - ##### Loans
-![Query Results](./screenshots/Final_Loans_Index.png)
+![Image](./screenshots/Ochie_Samuel_Final_Loans_Index.png)
 - ##### Fines
-![Query Results](./screenshots/Final_Fine_Index.png)
+![Image](./screenshots/Ochie_Samuel_Final_Fine_Index.png)
 
 
 | Index | Query it serves | Reasoning |
@@ -89,7 +89,7 @@ The command below was run to create the indexes.
 | `idx_fines_ispaid (IsPaid)` | Q-F: unpaid fines | **Experiment:** a boolean has very low selectivity; documented to show the optimiser may ignore it |
 
 The screenshot below shows that the indexes actually occupy a small space and as such are space efficient
-![Query Results](./screenshots/Size_of_Indexes.png)
+![Image](./screenshots/Ochie_Samuel_Size_of_Indexes.png)
 
 ## 5.2 Results before and after Indexes were created for Optimization
 Below shows the results of `ANALYZE` (actual rows and time), before and after the index, three runs each, median recorded. Performance benchmarks shows reduced execution overhead.
@@ -97,10 +97,10 @@ Below shows the results of `ANALYZE` (actual rows and time), before and after th
 **Query A** (`ANALYZE SELECT COUNT(*) FROM Loans WHERE Status = 'Overdue' AND DueDate < CURRENT_DATE - INTERVAL 30 DAY;`)
 
 ##### Before Indexes were created:
-![Query Results](./screenshots/QA_before_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QA_before_indexing.png)
 
 ##### After Indexes were created: 
-![Query Results](./screenshots/QA_after_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QA_after_indexing.png)
 
 ---
 ---
@@ -108,10 +108,10 @@ Below shows the results of `ANALYZE` (actual rows and time), before and after th
 **Query B** (`ANALYZE SELECT BookID, Title FROM Books WHERE Title LIKE 'Database%';`)
 
 ##### Before Indexes were created:
-![Query Results](./screenshots/QB_before_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QB_before_indexing.png)
 
 ##### After Indexes were created: 
-![Query Results](./screenshots/QB_after_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QB_after_indexing.png)
 
 ---
 ---
@@ -119,10 +119,10 @@ Below shows the results of `ANALYZE` (actual rows and time), before and after th
 **Query C** (`ANALYZE SELECT BookID, Title FROM Books WHERE Title LIKE '%Principles%';`)
 
 ##### Before Indexes were created:
-![Query Results](./screenshots/QC_before_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QC_before_indexing.png)
 
 ##### After Indexes were created: 
-![Query Results](./screenshots/QC_after_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QC_after_indexing.png)
 
 ---
 ---
@@ -130,10 +130,10 @@ Below shows the results of `ANALYZE` (actual rows and time), before and after th
 **Query D** (`ANALYZE SELECT * FROM Loans WHERE BorrowerID = 1234 AND Status = 'Borrowed';`)
 
 ##### Before Indexes were created:
-![Query Results](./screenshots/QD_before_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QD_before_indexing.png)
 
 ##### After Indexes were created: 
-![Query Results](./screenshots/QD_after_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QD_after_indexing.png)
 
 ---
 ---
@@ -141,10 +141,10 @@ Below shows the results of `ANALYZE` (actual rows and time), before and after th
 **Query E** (`ANALYZE SELECT * FROM Books WHERE ISBN = '9780001000100';`)
 
 ##### Before Indexes were created:
-![Query Results](./screenshots/QE_before_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QE_before_indexing.png)
 
 ##### After Indexes were created: 
-![Query Results](./screenshots/QE_after_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QE_after_indexing.png)
 
 ---
 ---
@@ -152,10 +152,10 @@ Below shows the results of `ANALYZE` (actual rows and time), before and after th
 **Query F** (`ANALYZE SELECT l.BorrowerID, SUM(f.Amount) AS UnpaidTotal FROM Fines f JOIN Loans l ON l.LoanID = f.LoanID WHERE f.IsPaid = FALSE GROUP BY l.BorrowerID;`)
 
 ##### Before Indexes were created:
-![Query Results](./screenshots/QF_before_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QF_before_indexing.png)
 
 ##### After Indexes were created: 
-![Query Results](./screenshots/QF_after_indexing.png)
+![Image](./screenshots/Ochie_Samuel_QF_after_indexing.png)
 
 ---
 

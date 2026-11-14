@@ -11,9 +11,9 @@ services:
     volumes:
       - primary_data:/var/lib/mysql
       - ./config/primary.cnf:/etc/mysql/conf.d/primary.cnf:ro,Z
-      - ./init/01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro,Z
-      - ./init/02-sample-data.sql:/docker-entrypoint-initdb.d/02-sample-data.sql:ro,Z
-      - ./init/03-replication-user.sql:/docker-entrypoint-initdb.d/03-replication-user.sql:ro,Z
+      - ./init/ Ochie_Samuel_01-schema.sql:/docker-entrypoint-initdb.d/ Ochie_Samuel_01-schema.sql:ro,Z
+      - ./init/ Ochie_Samuel_02-sample-data.sql:/docker-entrypoint-initdb.d/ Ochie_Samuel_02-sample-data.sql:ro,Z
+      - ./init/ Ochie_Samuel_03-replication-user.sql:/docker-entrypoint-initdb.d/ Ochie_Samuel_03-replication-user.sql:ro,Z
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s

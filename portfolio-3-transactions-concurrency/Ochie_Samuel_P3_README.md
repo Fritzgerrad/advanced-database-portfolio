@@ -15,12 +15,12 @@ When multiple library members attempt to borrow the last available copy of a pop
 
 ##
 The final SELECT query execution result grid in Session B shows the incorrect final stock count i.e 9 instead of 8 after two separate -1 decrements.
-![Query Results](./screenshots/SC1.png)
+![Image](./screenshots/Ochie_Samuel_SC1.png)
 
 Session B wrote a stale value based on an outdated read.
 ##
 The query is delaying to be executed
-![Query Results](./screenshots/SC2.png)
+![Image](./screenshots/Ochie_Samuel_SC2.png)
 
 
 Session B is safely queued and blocked from reading/writing until Session A commits because row-level pessimistic locking (FOR UPDATE) by the RDBMS forces concurrent sessions to wait for active transactions to release locks.
@@ -28,7 +28,7 @@ Session B is safely queued and blocked from reading/writing until Session A comm
 ##
 
 The final SELECT query result grid in Session B showing the correct decremented stock value i.e 8 after both transactions completed sequentially.
-![Query Results](./screenshots/SC3.png)
+![Image](./screenshots/Ochie_Samuel_SC3.png)
 Pessimistic locking successfully prevented the race condition, ensuring ACID compliance and data integrity. Once Session A committed (Step 8), Session B automatically unblocked, fetched the updated value, applied its increment/decrement cleanly, and maintained inventory consistency.
 
 
